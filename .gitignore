@@ -1,0 +1,14 @@
+# PlatformIO
+.pio/
+.vscode/
+logs/
+
+# Secrets: never commit these
+firmware/include/secrets.h
+server/.env
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
