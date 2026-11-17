@@ -12,3 +12,7 @@ node_modules/
 
 # OS
 .DS_Store
+
+# Local server data
+server/data/
+compile_commands.json

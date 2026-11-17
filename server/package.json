@@ -5,7 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "ai-job": "node ai_job.js"
+    "ai-job": "node ai_job.js",
+    "test": "./test_api.sh"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
 }
