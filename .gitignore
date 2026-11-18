@@ -2,6 +2,8 @@
 .pio/
 .vscode/
 logs/
+compile_commands.json
+.clangd
 
 # Secrets: never commit these
 firmware/include/secrets.h

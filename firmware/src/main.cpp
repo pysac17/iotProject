@@ -25,7 +25,7 @@ struct Every {
 Every motionTick    {1000 / MOTION_SAMPLE_HZ, 0};  // 20 ms -> 50 Hz
 Every secondTick    {1000, 0};
 Every drawTick      {250, 0};
-Every telemetryTick {30000, 0};
+Every telemetryTick {10000, 0};
 
 int         lightPct     = 0;
 float       tempC        = NAN;  // last good reading
@@ -114,7 +114,10 @@ void sendTelemetryNow() {
   t.motionSpikes = w.spikes;
   t.state        = focusState();
   t.sessionS     = focusSessionS();
-  sendTelemetry(t);
+  if (sendTelemetry(t)) {
+    Serial.printf("[net] telemetry sent: temp=%.1f light=%d state=%s\n",
+                  t.tempC, t.lightPct, focusStateName(t.state));
+  }
 }
 
 }  // namespace
