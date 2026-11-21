@@ -1,48 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desk Focus Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Chart.js from a CDN draws the history line chart -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desk Focus Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js from a CDN draws the line charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
-
 <body>
-    <header>
-        <h1>Desk Focus Dashboard</h1>
-        <p class="subtitle">Device <span id="device-id">g20-desk-01</span></p>
-    </header>
+  <header>
+    <h1>Desk Focus Dashboard</h1>
+    <p class="subtitle">Device <span id="device-id">g20-desk-01</span></p>
+  </header>
 
-    <main>
-        <!-- Live status: current temperature + online/offline -->
-        <section class="card" id="live-card">
-            <h2>Live</h2>
-            <div class="live-row">
-                <div class="temp">
-                    <span id="temp-value">--</span><span class="unit">°C</span>
-                </div>
-                <div class="status">
-                    <span id="status-badge" class="badge badge-unknown">Connecting…</span>
-                    <p id="last-seen">Waiting for data…</p>
-                </div>
-            </div>
-            <p id="error-msg" class="error" hidden></p>
-        </section>
+  <main>
+    <!-- Live status: current temperature + online/offline -->
+    <section class="card" id="live-card">
+      <h2>Live</h2>
+      <div class="live-row">
+        <div class="temp">
+          <span id="temp-value">--</span><span class="unit">°C</span>
+        </div>
+        <div class="status">
+          <span id="status-badge" class="badge badge-unknown">Connecting…</span>
+          <p id="last-seen">Waiting for data…</p>
+          <p id="live-health" class="muted small"></p>
+        </div>
+      </div>
+      <p id="error-msg" class="error" hidden></p>
+    </section>
 
-        <!-- History: temperature over the last 30 minutes -->
-        <section class="card">
-            <h2>Temperature, last 30 minutes</h2>
-            <div class="chart-box">
-                <canvas id="temp-chart"></canvas>
-            </div>
-            <p id="history-empty" class="muted" hidden>No readings in the last 30 minutes yet.</p>
-        </section>
-    </main>
+    <!-- Reliability: service levels, uptime, delivery, gaps, reboots, server downtime -->
+    <section class="card" id="reliability-card">
+      <div class="card-head">
+        <h2>Reliability</h2>
+        <p id="rel-window" class="muted small">Loading…</p>
+      </div>
 
-    <script src="app.js"></script>
+      <h3>Service levels</h3>
+      <div class="slo-row">
+        <div class="slo" id="slo-uptime">
+          <span class="slo-mark">–</span>
+          <div><strong>Uptime ≥ 99%</strong><p class="muted small" id="slo-uptime-text">–</p></div>
+        </div>
+        <div class="slo" id="slo-fresh">
+          <span class="slo-mark">–</span>
+          <div><strong>Data no older than 60 s</strong><p class="muted small" id="slo-fresh-text">–</p></div>
+        </div>
+        <div class="slo" id="slo-gaps">
+          <span class="slo-mark">–</span>
+          <div><strong>Every gap explained</strong><p class="muted small" id="slo-gaps-text">–</p></div>
+        </div>
+      </div>
+
+      <div class="big-row">
+        <div class="big">
+          <p class="big-label">Uptime</p>
+          <p class="big-value" id="rel-uptime">--</p>
+        </div>
+        <div class="big">
+          <p class="big-label">Messages received / expected</p>
+          <p class="big-value" id="rel-delivery">--</p>
+          <p class="muted small" id="rel-delivery-count"></p>
+        </div>
+      </div>
+
+      <div class="small-row">
+        <div class="stat"><p class="stat-value" id="rel-late">--</p><p class="stat-label">Delivered late (offline queue)</p></div>
+        <div class="stat"><p class="stat-value" id="rel-dropped">--</p><p class="stat-label">Dropped by device</p></div>
+        <div class="stat"><p class="stat-value" id="rel-reboots">--</p><p class="stat-label">Device reboots</p></div>
+        <div class="stat"><p class="stat-value" id="rel-restarts">--</p><p class="stat-label">Server restarts</p></div>
+      </div>
+
+      <h3>Gaps</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Start</th><th>End</th><th>Length</th><th>Missing</th><th>Cause</th></tr></thead>
+          <tbody id="gaps-body"></tbody>
+        </table>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <h3>Reboots</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Time</th><th>Reason</th><th>Meaning</th></tr></thead>
+              <tbody id="reboots-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3>Server downtime</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>From</th><th>To</th><th>Length</th></tr></thead>
+              <tbody id="downtime-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- History: temperature over the chosen time range -->
+    <section class="card">
+      <div class="card-head">
+        <h2>Temperature</h2>
+        <div class="range" role="group" aria-label="Time range">
+          <button type="button" data-range="1h" class="active">1 h</button>
+          <button type="button" data-range="24h">24 h</button>
+          <button type="button" data-range="72h">72 h</button>
+        </div>
+      </div>
+      <div class="chart-box">
+        <canvas id="temp-chart"></canvas>
+      </div>
+      <p class="muted small" id="history-note"></p>
+    </section>
+
+    <!-- Device health from the same history data -->
+    <section class="card">
+      <div class="card-head">
+        <h2>Device health</h2>
+        <p class="muted small" id="health-range"></p>
+      </div>
+      <div class="two-col">
+        <div>
+          <h3>Wi-Fi signal (dBm)</h3>
+          <div class="chart-box small-chart"><canvas id="rssi-chart"></canvas></div>
+        </div>
+        <div>
+          <h3>Free RAM (KB)</h3>
+          <div class="chart-box small-chart"><canvas id="heap-chart"></canvas></div>
+          <p class="muted small" id="heap-summary"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
 </body>
-
 </html>
