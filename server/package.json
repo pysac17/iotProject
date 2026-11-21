@@ -5,8 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "ai-job": "node ai_job.js",
-    "test": "./test_api.sh"
+    "forever": "./run_forever.sh",
+    "report": "node reliability_report.js",
+    "test": "./test_api.sh",
+    "test:reliability": "node test_reliability.js",
+    "ai-job": "node ai_job.js"
   },
   "dependencies": {},
   "engines": {

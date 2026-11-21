@@ -1,1 +1,48 @@
-<!-- Person 3: dashboard page (streaks, live status, charts, AI advice, login) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desk Focus Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js from a CDN draws the history line chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Desk Focus Dashboard</h1>
+        <p class="subtitle">Device <span id="device-id">g20-desk-01</span></p>
+    </header>
+
+    <main>
+        <!-- Live status: current temperature + online/offline -->
+        <section class="card" id="live-card">
+            <h2>Live</h2>
+            <div class="live-row">
+                <div class="temp">
+                    <span id="temp-value">--</span><span class="unit">°C</span>
+                </div>
+                <div class="status">
+                    <span id="status-badge" class="badge badge-unknown">Connecting…</span>
+                    <p id="last-seen">Waiting for data…</p>
+                </div>
+            </div>
+            <p id="error-msg" class="error" hidden></p>
+        </section>
+
+        <!-- History: temperature over the last 30 minutes -->
+        <section class="card">
+            <h2>Temperature, last 30 minutes</h2>
+            <div class="chart-box">
+                <canvas id="temp-chart"></canvas>
+            </div>
+            <p id="history-empty" class="muted" hidden>No readings in the last 30 minutes yet.</p>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

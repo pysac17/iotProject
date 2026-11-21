@@ -7,3 +7,6 @@
 #define SERVER_URL      "http://192.168.1.10:8080"
 #define DEVICE_ID       "g20-desk-01"
 #define DEVICE_API_KEY  "change-me"     // must be listed in DEVICE_API_KEYS in server/.env
+
+// Optional, only for an https:// SERVER_URL: the server's root certificate (PEM).
+// #define SERVER_ROOT_CA "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----\n"

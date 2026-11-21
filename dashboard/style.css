@@ -1,1 +1,63 @@
-/* Person 3: dashboard styles */
+/* Desk Focus Dashboard styles */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f4f5f7;
+  color: #1f2328;
+}
+
+header {
+  padding: 24px 32px 8px;
+}
+
+h1 { margin: 0; font-size: 1.6rem; }
+h2 { margin: 0 0 16px; font-size: 1.05rem; color: #57606a; font-weight: 600; }
+
+.subtitle { margin: 4px 0 0; color: #57606a; }
+
+main {
+  max-width: 960px;
+  padding: 16px 32px 32px;
+  display: grid;
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.live-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.temp { font-size: 3.5rem; font-weight: 700; line-height: 1; }
+.temp .unit { font-size: 1.5rem; font-weight: 500; color: #57606a; margin-left: 4px; }
+
+.status { text-align: right; }
+.status p { margin: 8px 0 0; color: #57606a; }
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.badge-online  { background: #dafbe1; color: #116329; }
+.badge-offline { background: #ffebe9; color: #a40e26; }
+.badge-unknown { background: #eaeef2; color: #57606a; }
+
+.chart-box { position: relative; height: 300px; }
+
+.muted { color: #57606a; }
+.error { color: #a40e26; margin: 12px 0 0; }

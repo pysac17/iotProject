@@ -4,6 +4,7 @@
 logs/
 compile_commands.json
 .clangd
+.cache/
 
 # Secrets: never commit these
 firmware/include/secrets.h
@@ -17,4 +18,3 @@ node_modules/
 
 # Local server data
 server/data/
-compile_commands.json
